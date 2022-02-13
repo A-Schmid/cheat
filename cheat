@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# directory containing cheat sheets
+path="$HOME/cheat/"
+
+selection=$(ls $path | dmenu -l 8)
+
+# cancel if nothing was selected
+if [ -z "$selection" ]
+then
+    exit 0
+fi
+
+fullpath="$path$selection"
+
+# get mime type of selected item
+type=$(xdg-mime query filetype "$fullpath")
+
+# open PDF documents with zathura because it starts so quickly
+# use default program for other file types
+# recommended for images: sxiv
+if [ $type = "application/pdf" ]
+then
+    zathura "$fullpath" &
+else
+    xdg-open "$fullpath" &
+fi
